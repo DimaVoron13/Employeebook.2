@@ -6,36 +6,40 @@ import java.util.*;
 
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
-    Set<String> employee = new HashSet<>();
+    Set<Employee> employees = new HashSet<>();
     private final EmployeeService serv;
 
     public DepartmentServiceImpl(EmployeeService serv) {
         this.serv = serv;
     }
 
+    {
+        employees.addAll(Employee.getSetEmployees());
+    }
+
     @Override
     public List<Employee> employeeInDepartment(Integer depId) {
-        List<Employee> result = serv.getListOfEmploye(depId);
+        List<Employee> result = serv.getListOfEmployee(employees, depId);
         return Collections.unmodifiableList(result);
     }
 
     @Override
     public int salarySum(Integer depId) {
-        return serv.salarySum(depId);
+        return serv.salarySum(employees, depId);
     }
 
     @Override
     public Employee salaryMax(Integer depId) {
-        return serv.salaryMax(depId);
+        return serv.salaryMax(employees, depId);
     }
 
     @Override
     public Employee salaryMin(Integer depId) {
-        return serv.salaryMin(depId);
+        return serv.salaryMin(employees, depId);
     }
 
     @Override
     public Map<Integer, List<Employee>> allEmployees() {
-        return serv.allEmployees();
+        return serv.allEmployees(employees);
     }
 }
