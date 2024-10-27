@@ -80,7 +80,7 @@ public class EmployeeServiceImplTest {
         listOfEmpl.add(emp3);
         actual.put(2, listOfEmpl);
         employees.add(emp3);
-        Map<Integer, List<Employee>> expected = serv.allEmployees(employees);
+        Map<Integer, List<Employee>> expected = serv.allEmployees();
         assertEquals(actual, expected);
     }
 }

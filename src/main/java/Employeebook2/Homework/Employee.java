@@ -69,19 +69,4 @@ public class Employee {
     public int hashCode() {
         return Objects.hash(name, secondName, departmentNo, salary);
     }
-
-    public static Set<Employee> getSetEmployees() {
-        Set<Employee> employees = new HashSet<>();
-        employees.add(new Employee("Андрицкая", "Светлана", 1, 20_000));
-        employees.add(new Employee("Соболева", "Елена", 2, 24_000));
-        employees.add(new Employee("Некрасова", "Олеся", 5, 29_000));
-        employees.add(new Employee("Стяжкина", "Надежда", 4, 35_000));
-        employees.add(new Employee("Лампель", "Екатерина", 4, 59_000));
-        employees.add(new Employee("Смирнов", "Евгений", 1, 14_000));
-        employees.add(new Employee("Леуский", "Владислав", 3, 7_000));
-        employees.add(new Employee("Яковлев", "Андрей", 5, 2_000));
-        employees.add(new Employee("Хохлов", "Сергей", 1, 43_000));
-        employees.add(new Employee("Дудоров", "Олег", 2, 25_000));
-        return employees;
-    }
 }

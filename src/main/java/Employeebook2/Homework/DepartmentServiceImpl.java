@@ -6,16 +6,15 @@ import java.util.*;
 
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
-    Set<Employee> employees = new HashSet<>();
-    private final EmployeeService serv;
+
+    private EmployeeService serv;
 
     public DepartmentServiceImpl(EmployeeService serv) {
         this.serv = serv;
     }
 
-    {
-        employees.addAll(Employee.getSetEmployees());
-    }
+    Set<Employee> employees = serv.getSetEmployees();
+
 
     @Override
     public List<Employee> employeeInDepartment(Integer depId) {
@@ -40,6 +39,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public Map<Integer, List<Employee>> allEmployees() {
-        return serv.allEmployees(employees);
+        return serv.allEmployees();
     }
 }

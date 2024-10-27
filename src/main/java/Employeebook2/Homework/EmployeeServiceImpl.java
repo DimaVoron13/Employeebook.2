@@ -10,8 +10,27 @@ import static java.util.stream.Collectors.groupingBy;
 @Repository
 public class EmployeeServiceImpl implements EmployeeService {
 
+    Set<Employee> employees = new HashSet<>();
+
+    @Override
+    public Set<Employee> getSetEmployees() {
+        Set<Employee> employees = new HashSet<>();
+        employees.add(new Employee("Андрицкая", "Светлана", 1, 20_000));
+        employees.add(new Employee("Соболева", "Елена", 2, 24_000));
+        employees.add(new Employee("Некрасова", "Олеся", 5, 29_000));
+        employees.add(new Employee("Стяжкина", "Надежда", 4, 35_000));
+        employees.add(new Employee("Лампель", "Екатерина", 4, 59_000));
+        employees.add(new Employee("Смирнов", "Евгений", 1, 14_000));
+        employees.add(new Employee("Леуский", "Владислав", 3, 7_000));
+        employees.add(new Employee("Яковлев", "Андрей", 5, 2_000));
+        employees.add(new Employee("Хохлов", "Сергей", 1, 43_000));
+        employees.add(new Employee("Дудоров", "Олег", 2, 25_000));
+        return employees;
+    }
+
+    @Override
     public List<Employee> getListOfEmployee(Set<Employee> employees, Integer depId) {
-        List<Employee> emplo = employees
+        List<Employee> emplo = this.employees
                 .stream()
                 .filter(employee -> Objects.equals(employee.getDepartmentNo(), depId))
                 .toList();
@@ -21,7 +40,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public int salarySum(Set<Employee> employees, Integer depId) {
         int sum = 0;
-        for (Employee temp : employees) {
+        for (Employee temp : this.employees) {
             if (temp.getDepartmentNo().equals(depId)) {
                 sum = sum + temp.getSalary();
             }
@@ -31,7 +50,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee salaryMax(Set<Employee> employees, Integer depId) {
-        Employee employeeInDepartment = employees
+        Employee employeeInDepartment = this.employees
                 .stream()
                 .filter(employee -> Objects.equals(employee.getDepartmentNo(), depId))
                 .max(comparing(Employee::getSalary))
@@ -41,7 +60,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee salaryMin(Set<Employee> employees, Integer depId) {
-        Employee employeeInDepartment = employees
+        Employee employeeInDepartment = this.employees
                 .stream()
                 .filter(employee -> Objects.equals(employee.getDepartmentNo(), depId))
                 .min(comparing(Employee::getSalary))
@@ -50,8 +69,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Map<Integer, List<Employee>> allEmployees(Set<Employee> employees) {
-        Map<Integer, List<Employee>> temp = employees
+    public Map<Integer, List<Employee>> allEmployees() {
+        Map<Integer, List<Employee>> temp = this.employees
                 .stream()
                 .collect(groupingBy(Employee::getDepartmentNo));
         return Collections.unmodifiableMap(temp);
