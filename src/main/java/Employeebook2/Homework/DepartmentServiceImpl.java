@@ -4,41 +4,61 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static java.util.Comparator.comparing;
+
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
 
-    private EmployeeService serv;
+    private final EmployeeService serv;
 
     public DepartmentServiceImpl(EmployeeService serv) {
         this.serv = serv;
     }
 
-    Set<Employee> employees = serv.getSetEmployees();
-
-
-    @Override
-    public List<Employee> employeeInDepartment(Integer depId) {
-        List<Employee> result = serv.getListOfEmployee(employees, depId);
-        return Collections.unmodifiableList(result);
-    }
-
     @Override
     public int salarySum(Integer depId) {
-        return serv.salarySum(employees, depId);
+        int result = 0;
+        for (Employee temp : serv.getEmployees()) {
+            if (temp.getDepartmentNo() == depId) {
+                result = result + temp.getSalary();
+            }
+        }
+        return result;
     }
 
     @Override
     public Employee salaryMax(Integer depId) {
-        return serv.salaryMax(employees, depId);
+        Employee employeeInDepartment = serv.getEmployees()
+                .stream()
+                .filter(x -> x.getDepartmentNo().equals(depId))
+                .max(comparing(x -> x.getSalary()))
+                .orElseThrow(() -> new DepartmentNotFoundException("Department not found"));
+        return employeeInDepartment;
     }
 
     @Override
     public Employee salaryMin(Integer depId) {
-        return serv.salaryMin(employees, depId);
+        Employee employeeInDepartment = serv.getEmployees()
+                .stream()
+                .filter(x -> x.getDepartmentNo().equals(depId))
+                .min(comparing(x -> x.getSalary()))
+                .orElseThrow(() -> new DepartmentNotFoundException("Department not found"));
+        return employeeInDepartment;
     }
 
     @Override
-    public Map<Integer, List<Employee>> allEmployees() {
-        return serv.allEmployees();
+    public Set<Employee> allEmployees() {
+        return serv.getEmployees();
+    }
+
+    @Override
+    public List<Employee> employeeInDepartment(Integer depId) {
+        List<Employee> temp = new ArrayList<>();
+        for (Employee t : serv.getEmployees()) {
+            if (Objects.equals(t.getDepartmentNo(), depId)) {
+                temp.add(t);
+            }
+        }
+        return Collections.unmodifiableList(temp);
     }
 }

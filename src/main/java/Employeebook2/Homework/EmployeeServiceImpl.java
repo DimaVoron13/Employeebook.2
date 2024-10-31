@@ -4,75 +4,79 @@ import org.springframework.stereotype.Repository;
 
 import java.util.*;
 
-import static java.util.Comparator.comparing;
-import static java.util.stream.Collectors.groupingBy;
+import org.apache.commons.lang3.StringUtils;
 
 @Repository
 public class EmployeeServiceImpl implements EmployeeService {
 
-    Set<Employee> employees = new HashSet<>();
+    private final Set<Employee> empl = new HashSet<>();
 
-    @Override
-    public Set<Employee> getSetEmployees() {
-        Set<Employee> employees = new HashSet<>();
-        employees.add(new Employee("Андрицкая", "Светлана", 1, 20_000));
-        employees.add(new Employee("Соболева", "Елена", 2, 24_000));
-        employees.add(new Employee("Некрасова", "Олеся", 5, 29_000));
-        employees.add(new Employee("Стяжкина", "Надежда", 4, 35_000));
-        employees.add(new Employee("Лампель", "Екатерина", 4, 59_000));
-        employees.add(new Employee("Смирнов", "Евгений", 1, 14_000));
-        employees.add(new Employee("Леуский", "Владислав", 3, 7_000));
-        employees.add(new Employee("Яковлев", "Андрей", 5, 2_000));
-        employees.add(new Employee("Хохлов", "Сергей", 1, 43_000));
-        employees.add(new Employee("Дудоров", "Олег", 2, 25_000));
-        return employees;
+    {
+        empl.add(new Employee("Андрицкая", "Светлана", 1, 20_000));
+        empl.add(new Employee("Соболева", "Елена", 2, 24_000));
+        empl.add(new Employee("Некрасова", "Олеся", 5, 29_000));
+        empl.add(new Employee("Стяжкина", "Надежда", 4, 35_000));
+        empl.add(new Employee("Лампель", "Екатерина", 4, 59_000));
+        empl.add(new Employee("Смирнов", "Евгений", 1, 14_000));
+        empl.add(new Employee("Леуский", "Владислав", 3, 7_000));
+        empl.add(new Employee("Яковлев", "Андрей", 5, 2_000));
+        empl.add(new Employee("Хохлов", "Сергей", 1, 43_000));
+        empl.add(new Employee("Дудоров", "Олег", 2, 25_000));
     }
 
-    @Override
-    public List<Employee> getListOfEmployee(Set<Employee> employees, Integer depId) {
-        List<Employee> emplo = this.employees
-                .stream()
-                .filter(employee -> Objects.equals(employee.getDepartmentNo(), depId))
-                .toList();
-        return emplo;
-    }
+    public Map<String, Employee> employees = new HashMap<>();
 
-    @Override
-    public int salarySum(Set<Employee> employees, Integer depId) {
-        int sum = 0;
-        for (Employee temp : this.employees) {
-            if (temp.getDepartmentNo().equals(depId)) {
-                sum = sum + temp.getSalary();
-            }
+    {
+        for (Employee temp : empl) {
+            employees.put(temp.makeKey(temp), temp);
         }
-        return sum;
     }
 
     @Override
-    public Employee salaryMax(Set<Employee> employees, Integer depId) {
-        Employee employeeInDepartment = this.employees
-                .stream()
-                .filter(employee -> Objects.equals(employee.getDepartmentNo(), depId))
-                .max(comparing(Employee::getSalary))
-                .orElseThrow(() -> new DepartmentNotFoundException("Department not found"));
-        return employeeInDepartment;
+    public Set<Employee> getEmployees() {
+        return Collections.unmodifiableSet(empl);
     }
 
     @Override
-    public Employee salaryMin(Set<Employee> employees, Integer depId) {
-        Employee employeeInDepartment = this.employees
-                .stream()
-                .filter(employee -> Objects.equals(employee.getDepartmentNo(), depId))
-                .min(comparing(Employee::getSalary))
-                .orElseThrow(() -> new DepartmentNotFoundException("Department not found"));
-        return employeeInDepartment;
+    public String addEmployee(String name, String secondName, int depId, int salary) {
+        if (name.isEmpty() || secondName.isEmpty()) {
+            throw new FirstNameOrLastNameIsEmptyException("e");
+        }
+        name = StringUtils.capitalize(name);
+        secondName = StringUtils.capitalize(secondName);
+        Employee temp = new Employee(name, secondName, depId, salary);
+        String word = "";
+        if (employees.containsKey(temp.makeKey(temp))) {
+            throw new EmployeeAlreadyAddedException("e");
+        } else {
+            empl.add(temp);
+            employees.put(temp.makeKey(temp), temp);
+            word = "Success, сотрудник " + temp.toString() + ", id = " + temp.getDepartmentNo() + " добавлен.";
+        }
+        return word;
     }
 
     @Override
-    public Map<Integer, List<Employee>> allEmployees() {
-        Map<Integer, List<Employee>> temp = this.employees
-                .stream()
-                .collect(groupingBy(Employee::getDepartmentNo));
-        return Collections.unmodifiableMap(temp);
+    public String findEmployee(String name, String secondName) {
+        Employee e = new Employee(name, secondName, 1, 1);
+        String temp = e.makeKey(e);
+        if (!employees.containsKey(temp)) {
+            throw new EmployeeNotExistException("ex");
+        } else {
+            return "Сотрудник " + name + " " + secondName + ", id = "
+                    + employees.get(temp).getDepartmentNo() + " находится в штате.";
+        }
+    }
+
+    @Override
+    public String delEmployee(String name, String secondName) {
+        Employee e = new Employee(name, secondName, 0, 0);
+        String temp = e.makeKey(e);
+        if (!employees.containsKey(temp)) {
+            throw new EmployeeNotExistException("e");
+        } else {
+            employees.remove(temp);
+            return "Сотрудник " + temp + " удален из списка.";
+        }
     }
 }

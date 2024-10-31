@@ -1,7 +1,7 @@
 package Employeebook2.Homework;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 public interface DepartmentService {
     List<Employee> employeeInDepartment(Integer depId);
@@ -12,5 +12,5 @@ public interface DepartmentService {
 
     Employee salaryMin(Integer depId);
 
-    Map<Integer, List<Employee>> allEmployees();
+    Set<Employee> allEmployees();
 }

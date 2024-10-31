@@ -4,15 +4,11 @@ import java.util.*;
 
 public interface EmployeeService {
 
-    Set<Employee> getSetEmployees();
+    String addEmployee(String name, String secondName, int depId, int salary);
 
-    List<Employee> getListOfEmployee(Set<Employee> employees, Integer depId);
+    String delEmployee(String name, String secondName);
 
-    int salarySum(Set<Employee> employees, Integer depId);
+    String findEmployee(String name, String secondName);
 
-    Employee salaryMax(Set<Employee> employees, Integer depId);
-
-    Employee salaryMin(Set<Employee> employees, Integer depId);
-
-    Map<Integer, List<Employee>> allEmployees();
+    Set<Employee> getEmployees();
 }

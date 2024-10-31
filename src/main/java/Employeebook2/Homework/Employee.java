@@ -1,8 +1,6 @@
 package Employeebook2.Homework;
 
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 public class Employee {
     private String name;
@@ -19,7 +17,7 @@ public class Employee {
 
     @Override
     public String toString() {
-        return this.name + " " + this.secondName + ", salary " + salary + " ";
+        return this.name + " " + this.secondName + ", dep# " + this.departmentNo + ", salary " + salary + " ";
     }
 
     public String getName() {
@@ -58,11 +56,11 @@ public class Employee {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Employee emploee = (Employee) o;
-        return Objects.equals(this.name, emploee.name) &&
-                Objects.equals(this.secondName, emploee.secondName) &&
-                Objects.equals(this.departmentNo, emploee.departmentNo) &&
-                Objects.equals(this.salary, emploee.salary);
+        Employee employee = (Employee) o;
+        return Objects.equals(this.name, employee.name) &&
+                Objects.equals(this.secondName, employee.secondName) &&
+                Objects.equals(this.departmentNo, employee.departmentNo) &&
+                Objects.equals(this.salary, employee.salary);
     }
 
     @Override
