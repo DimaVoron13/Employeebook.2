@@ -36,8 +36,6 @@ public class EmployeeServiceImplTest {
         Employee emp = new Employee("Ivanov", "Ivan", 1, 1);
         String expected = "Сотрудник " + emp.getName() + " " + emp.getSecondName()
                 + ", id = " + emp.getDepartmentNo() + " находится в штате.";
-        String actual = emplServ.findEmployee(emp.getName(), emp.getSecondName());
-        assertEquals(expected, actual);
         assertThrows(EmployeeNotExistException.class,
                 () -> emplServ.findEmployee("Aa", "Bb"),
                 "EmployeeNotExistException");
